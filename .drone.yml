@@ -1,7 +1,6 @@
 
 pipeline:
 
-
   linux-packer-validate:
     image: chrisns/packer-ansible
     commands:
