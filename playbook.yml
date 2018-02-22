@@ -1,0 +1,49 @@
+---
+- name: Pre-reqs for ansible to run
+  hosts: all
+  gather_facts: false
+  become: yes
+  pre_tasks:
+    - raw: test -e /usr/bin/python || ( yum -y update && yum install -y python-minimal )
+
+- name: Build Data Ingest Linux Server.
+  hosts: all
+  become: true
+  tasks:
+  - name: EFU Group
+    group:
+      name: efu
+      system: yes
+
+  - name: Create wherescape user
+    user:
+      name: wherescape
+      group: SSM
+
+  - name: Make directory structure
+    file:
+      path: /{{ item }}
+      state: directory
+      mode: 0775
+      recurse: yes
+      owner: wherescape
+      group: SSM
+    with_items:
+      - EF
+      - appdata
+      - appdata/EF
+      - appdata/EF/archive
+      - appdata/EF/data
+      - appdata/EF/json
+      - appdata/EF/keys
+      - appdata/EF/log
+      - appdata/EF/scripts
+      - appdata/EF/sql
+
+  - file:
+      src: /appdata/EF
+      dest: /EF
+      force: yes
+      owner: wherescape
+      group: SSM
+      state: link
