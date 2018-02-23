@@ -18,7 +18,7 @@
   - name: Create wherescape user
     user:
       name: wherescape
-      group: EFU
+      group: efu
 
   - name: Make directory structure
     file:
@@ -27,7 +27,7 @@
       mode: 0775
       recurse: yes
       owner: wherescape
-      group: EFU
+      group: efu
     with_items:
       - EF
       - appdata
@@ -45,5 +45,5 @@
       dest: /EF
       force: yes
       owner: wherescape
-      group: EFU
+      group: efu
       state: link
