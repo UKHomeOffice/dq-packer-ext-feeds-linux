@@ -104,19 +104,6 @@
       - AWSCLI
     become: true
 
-  - name: Copy cloudwatch healthchecker
-    copy:
-      src: reporthealth.sh
-      dest: /usr/bin/reporthealth.sh
-      owner: root
-      group: root
-      mode: 0755
-
-  - name: Cloudwatch metrics Cron Job
-    cron:
-      name: Cloudwatch metrics
-      job: /usr/bin/reporthealth.sh
-
   - name: Download cloudwatch logs agent
     get_url:
       url: https://s3.amazonaws.com//aws-cloudwatch/downloads/latest/awslogs-agent-setup.py
