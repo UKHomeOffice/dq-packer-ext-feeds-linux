@@ -54,7 +54,7 @@
       state: directory
       mode: 0700
       owner: wherescape
-      group: SSM
+      group: efu
 
   - name: Create authorized_keys file for Wherescape user
     copy:
@@ -63,7 +63,7 @@
       force: no
       mode: 0600
       owner: wherescape
-      group: SSM
+      group: efu
 
   - name: Yum Install Pre Dependencies
     yum: name={{ item }}
