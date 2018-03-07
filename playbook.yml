@@ -6,7 +6,7 @@
   pre_tasks:
     - raw: test -e /usr/bin/python || ( yum -y update && yum install -y python-minimal )
 
-- name: Build Data Ingest Linux Server.
+- name: Build External Feeds Linux Server.
   hosts: all
   become: true
   tasks:
@@ -82,7 +82,15 @@
       - python-pip
       - git
       - cloud-utils
+      - nodejs
     become: true
+
+  - name: Pip Install Dependencies
+    pip: 'name={{ item }}'
+    with_items:
+      - virtualenv
+      - AWSCLI
+      - ftputil
 
   - name: Install Python 2.7
     unarchive:
@@ -103,6 +111,46 @@
     with_items:
       - AWSCLI
     become: true
+
+  - name: GET config files from DQ-config-bucket
+    shell: '{{ item }}'
+    with_items:
+      - aws configure set aws_access_key_id '{{aws_access_key_id}}'
+      - aws configure set aws_secret_access_key '{{aws_secret_access_key}}'
+      - aws s3 cp s3://dq-config-bucket/dq-ext-feeds-server /tmp/install --recursive
+
+  - name: Copy EF_DB config
+    command: cp /tmp/install/DRT_EF_DB.ini /appdata/EF/scripts
+
+  - name: Copy AWS config
+    comman: cp /tmp/install/DRT_EF_FTP.ini /appdata/EF/aws/scripts
+
+  - name: Install Postgresql 9.6
+    shell: '{{ item }}'
+    with_items:
+      - rpm -ivh https://yum.postgresql.org/9.6/redhat/rhel-7.3-x86_64/pgdg-centos96-9.6-3.noarch.rpm
+      - yum update -y
+      - yum install -y postgresql96
+
+  - name: Clone script repos from Github
+    git:
+      repo: git@gitlab.digital.homeoffice.gov.uk:2222/dacc-dq/external_feed.git
+      dest: /opt/dq-packer-ext-feeds-linux
+      accept_hostkey: yes
+      clone: yes
+      update: no
+
+  - name: Symlink script files in opt
+    file:
+      src: "{{ item.src }}"
+      dest: "{{ item.dest }}"
+      force: yes
+      state: link
+      owner: wherescape
+      group: efu
+    with_items:
+      - { src: '/opt/dq-packer-ext-feeds-linux/DB/scripts/', dest: '/appdata/EF/scripts'}
+      - { src: '/opt/dq-packer-ext-feeds-linux/FTP/scripts/', dest: '/appdata/EF/aws/scripts'}
 
   - name: Download cloudwatch logs agent
     get_url:
@@ -131,6 +179,7 @@
         log_group_name = /Centos_Server/cloud-init/output
         log_stream_name = {instance_id}
         datetime_format = %Y-%m-%d %H:%M:%S,%f
+
   - name: Install cloudwatch log agent
     environment:
       LC_ALL: C
