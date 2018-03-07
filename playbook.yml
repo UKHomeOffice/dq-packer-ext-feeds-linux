@@ -123,7 +123,7 @@
     command: cp /tmp/install/DRT_EF_DB.ini /appdata/EF/scripts
 
   - name: Copy AWS config
-    comman: cp /tmp/install/DRT_EF_FTP.ini /appdata/EF/aws/scripts
+    command: cp /tmp/install/DRT_EF_FTP.ini /appdata/EF/aws/scripts
 
   - name: Install Postgresql 9.6
     shell: '{{ item }}'
