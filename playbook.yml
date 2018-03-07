@@ -137,7 +137,7 @@
       repo: git@gitlab.digital.homeoffice.gov.uk:2222/dacc-dq/external_feed.git
       version: master
       dest: /opt/dq-packer-ext-feeds-linux
-      key_file: '{{ git_private_access_key }}'
+      key_file: '{{ git_key }}'
       clone: yes
       update: no
 
