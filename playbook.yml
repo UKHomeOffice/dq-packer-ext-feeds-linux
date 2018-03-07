@@ -135,8 +135,9 @@
   - name: Clone script repos from Github
     git:
       repo: git@gitlab.digital.homeoffice.gov.uk:2222/dacc-dq/external_feed.git
+      version: master
       dest: /opt/dq-packer-ext-feeds-linux
-      accept_hostkey: yes
+      key_file: '{{ git_private_access_key }}'
       clone: yes
       update: no
 
