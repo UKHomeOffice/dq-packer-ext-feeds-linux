@@ -142,7 +142,7 @@
 
   - name: Clone script repos from Github
     git:
-      repo: ssh://git@gitlab.digital.homeoffice.gov.uk:2222/dacc-dq/external_feed.git
+      repo: ssh://git@gitlab.digital.homeoffice.gov.uk/dacc-dq/external_feed.git
       version: update-vars
       dest: /opt/dq-packer-ext-feeds-linux
       key_file: '{{ git_key | b64decode }}'
