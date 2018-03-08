@@ -123,9 +123,26 @@
       - yum update -y
       - yum install -y postgresql96
 
+  - name: Create SSH config file for Wherescape user
+    copy:
+      content: ""
+      dest: /home/wherescape/.ssh/config
+      force: no
+      mode: 0755
+      owner: wherescape
+      group: efu
+
+  - name: Setup SSH Git config
+    blockinfile:
+      path: /home/wherescape/.ssh/config
+      block: |
+        Host=gitlab.digital.homeoffice.gov.uk
+        Hostname=gitlab.digital.homeoffice.gov.uk
+        Port=2222
+
   - name: Clone script repos from Github
     git:
-      repo: https://gitlab.digital.homeoffice.gov.uk/dacc-dq/external_feed.git
+      repo: ssh://git@gitlab.digital.homeoffice.gov.uk:2222/dacc-dq/external_feed.git
       version: update-vars
       dest: /opt/dq-packer-ext-feeds-linux
       key_file: '{{ git_key | b64decode }}'
