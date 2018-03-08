@@ -116,39 +116,25 @@
       - AWSCLI
     become: true
 
-  - name: Install Postgresql 9.6
-    shell: '{{ item }}'
-    with_items:
-      - rpm -ivh https://yum.postgresql.org/9.6/redhat/rhel-7.3-x86_64/pgdg-centos96-9.6-3.noarch.rpm
-      - yum update -y
-      - yum install -y postgresql96
-
-  - name: Create SSH config file for Wherescape user
-    copy:
-      content: ""
-      dest: /home/wherescape/.ssh/config
-      force: no
-      mode: 0755
-      owner: wherescape
-      group: efu
-
-  - name: Setup SSH Git config
-    blockinfile:
-      path: /home/wherescape/.ssh/config
-      block: |
-        Host=gitlab.digital.homeoffice.gov.uk
-        Hostname=gitlab.digital.homeoffice.gov.uk
-        Port=2222
+  - name: Configure git to use HTTPS
+    shell: git config --global url."https://".insteadOf git://
 
   - name: Clone script repos from Github
     git:
-      repo: ssh://git@gitlab.digital.homeoffice.gov.uk/dacc-dq/external_feed.git
+      repo: git://gitlab.digital.homeoffice.gov.uk/dacc-dq/external_feed.git
       version: update-vars
       dest: /opt/dq-packer-ext-feeds-linux
       key_file: '{{ git_key | b64decode }}'
       accept_hostkey: yes
       clone: yes
       update: no
+
+  - name: Install Postgresql 9.6
+    shell: '{{ item }}'
+    with_items:
+      - rpm -ivh https://yum.postgresql.org/9.6/redhat/rhel-7.3-x86_64/pgdg-centos96-9.6-3.noarch.rpm
+      - yum update -y
+      - yum install -y postgresql96
 
   - name: Symlink script files in opt
     file:
