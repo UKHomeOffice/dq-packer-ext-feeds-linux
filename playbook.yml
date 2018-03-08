@@ -116,18 +116,11 @@
       - AWSCLI
     become: true
 
-  - name: Configure git to use HTTPS
-    shell: git config --global url."https://".insteadOf git://
-
-  - name: Clone script repos from Github
-    git:
-      repo: git://gitlab.digital.homeoffice.gov.uk/dacc-dq/external_feed.git
-      version: update-vars
-      dest: /opt/dq-packer-ext-feeds-linux
-      key_file: '{{ git_key | b64decode }}'
-      accept_hostkey: yes
-      clone: yes
-      update: no
+  - name: Pull from GIT
+    shell: |
+      git config --global url."https://".insteadOf git://
+      echo '{{ git_key }}' | base64 -D > /root/.ssh/id_rsa && chmod 600 /root/.ssh/id_rsa
+      git clone git://gitlab.digital.homeoffice.gov.uk/dacc-dq/external_feed.git
 
   - name: Install Postgresql 9.6
     shell: '{{ item }}'
