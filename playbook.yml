@@ -128,7 +128,7 @@
       repo: git@gitlab.digital.homeoffice.gov.uk:2222/dacc-dq/external_feed.git
       version: update-vars
       dest: /opt/dq-packer-ext-feeds-linux
-      key_file: '{{ git_key }}'
+      key_file: '{{ git_key | b64decode }}'
       clone: yes
       update: no
 
