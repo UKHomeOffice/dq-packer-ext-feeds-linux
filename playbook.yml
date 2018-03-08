@@ -118,9 +118,8 @@
 
   - name: Pull from GIT
     shell: |
-      git config --global url."https://".insteadOf git://
       echo '{{ git_key }}' | base64 -d > /root/.ssh/id_rsa && chmod 600 /root/.ssh/id_rsa
-      git clone -b update-vars git://gitlab.digital.homeoffice.gov.uk/dacc-dq/external_feed.git
+      git clone -b update-vars ssh://git@gitlab.digital.homeoffice.gov.uk:2222/dacc-dq/external_feed.git
 
   - name: Install Postgresql 9.6
     shell: '{{ item }}'
@@ -176,6 +175,21 @@
         [/Centos_Server/cloud-init/output]
         file = /var/log/cloud-init-output.log
         log_group_name = /Centos_Server/cloud-init/output
+        log_stream_name = {instance_id}
+        datetime_format = %Y-%m-%d %H:%M:%S,%f
+        [/Centos_Server/cron]
+        file = /var/log/cron
+        log_group_name = /Centos_Server/cron
+        log_stream_name = {instance_id}
+        datetime_format = %Y-%m-%d %H:%M:%S,%f
+        [/Centos_Server/secure]
+        file = /var/log/secure
+        log_group_name = /Centos_Server/secure
+        log_stream_name = {instance_id}
+        datetime_format = %Y-%m-%d %H:%M:%S,%f
+        [/Centos_Server/yum]
+        file = /var/log/yum.log
+        log_group_name = /Centos_Server/yum
         log_stream_name = {instance_id}
         datetime_format = %Y-%m-%d %H:%M:%S,%f
 
