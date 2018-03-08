@@ -141,14 +141,14 @@
       - { src: '/opt/dq-packer-ext-feeds-linux/FTP/scripts/', dest: '/appdata/EF/aws/scripts'}
 
   - name: '{{ item.name }}'
-      cron:
-        user: '{{ item.user }}'
-        minute: '{{ item.minute }}'
-        hour: '{{ item.hour }}'
-        day: '{{ item.day }}'
-        job: '{{ item.job }}'
-      with_items:
-          - { name: Cron DRT_EF_FTP_AWS.py, user: ef, minute: "*/1",  hour: "*", day: "*",  job: "/appdata/EF/aws/scripts/DRT_EF_FTP_AWS.py" }
+    cron:
+      user: '{{ item.user }}'
+      minute: '{{ item.minute }}'
+      hour: '{{ item.hour }}'
+      day: '{{ item.day }}'
+      job: '{{ item.job }}'
+    with_items:
+        - { name: Cron DRT_EF_FTP_AWS.py, user: ef, minute: "*/1",  hour: "*", day: "*",  job: "/appdata/EF/aws/scripts/DRT_EF_FTP_AWS.py" }
 
   - name: Download cloudwatch logs agent
     get_url:
