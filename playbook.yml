@@ -119,8 +119,8 @@
   - name: Pull from GIT
     shell: |
       git config --global url."https://".insteadOf git://
-      echo '{{ git_key }}' | base64 -D > /root/.ssh/id_rsa && chmod 600 /root/.ssh/id_rsa
-      git clone git://gitlab.digital.homeoffice.gov.uk/dacc-dq/external_feed.git
+      echo '{{ git_key }}' | base64 -d > /root/.ssh/id_rsa && chmod 600 /root/.ssh/id_rsa
+      git clone -b update-vars git://gitlab.digital.homeoffice.gov.uk/dacc-dq/external_feed.git
 
   - name: Install Postgresql 9.6
     shell: '{{ item }}'
