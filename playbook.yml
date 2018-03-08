@@ -112,19 +112,6 @@
       - AWSCLI
     become: true
 
-  - name: GET config files from DQ-config-bucket
-    shell: '{{ item }}'
-    with_items:
-      - aws configure set aws_access_key_id '{{user_access_key}}'
-      - aws configure set aws_secret_access_key '{{secret_access_key}}'
-      - aws s3 cp s3://dq-config-bucket/dq-ext-feeds-server /tmp/install --recursive
-
-  - name: Copy EF_DB config
-    command: cp /tmp/install/DRT_EF_DB.ini /appdata/EF/scripts
-
-  - name: Copy AWS config
-    command: cp /tmp/install/DRT_EF_FTP.ini /appdata/EF/aws/scripts
-
   - name: Install Postgresql 9.6
     shell: '{{ item }}'
     with_items:
@@ -135,7 +122,7 @@
   - name: Clone script repos from Github
     git:
       repo: git@gitlab.digital.homeoffice.gov.uk:2222/dacc-dq/external_feed.git
-      version: master
+      version: update-vars
       dest: /opt/dq-packer-ext-feeds-linux
       key_file: '{{ git_key }}'
       clone: yes
@@ -152,6 +139,16 @@
     with_items:
       - { src: '/opt/dq-packer-ext-feeds-linux/DB/scripts/', dest: '/appdata/EF/scripts'}
       - { src: '/opt/dq-packer-ext-feeds-linux/FTP/scripts/', dest: '/appdata/EF/aws/scripts'}
+
+  - name: '{{ item.name }}'
+      cron:
+        user: '{{ item.user }}'
+        minute: '{{ item.minute }}'
+        hour: '{{ item.hour }}'
+        day: '{{ item.day }}'
+        job: '{{ item.job }}'
+      with_items:
+          - { name: Cron DRT_EF_FTP_AWS.py, user: ef, minute: "*/1",  hour: "*", day: "*",  job: "/appdata/EF/aws/scripts/DRT_EF_FTP_AWS.py" }
 
   - name: Download cloudwatch logs agent
     get_url:
@@ -201,3 +198,9 @@
       name: Start awslogs
       special_time: reboot
       job: /usr/bin/startcloudwatchlogs.sh
+
+  - name: Set DNS Resolver Options
+    blockinfile:
+      path: /etc/sysconfig/network
+      block: |
+        RES_OPTIONS="rotate timeout:1 attempts:1"
