@@ -91,6 +91,10 @@
       - virtualenv
       - AWSCLI
       - ftputil
+      - psycopg2
+      - paramiko
+      - argparse
+      - boto3
 
   - name: Install Python 2.7
     unarchive:
