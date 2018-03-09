@@ -99,7 +99,7 @@
   - name: Pull from GIT
     shell: |
       cd /tmp
-      sudo -s echo "{{ git_key }}" | base64 -d > /home/wherescape/.ssh/id_rsa
+      sudo -s echo '{{ git_key }}' | base64 -d > /home/wherescape/.ssh/id_rsa
       chown -R wherescape:efu /home/wherescape/.ssh/id_rsa
       sudo -u wherescape chmod 600 /home/wherescape/.ssh/id_rsa
       sudo -u wherescape git clone -b update-vars ssh://git@gitlab.digital.homeoffice.gov.uk:2222/dacc-dq/external_feed.git /home/wherescape/external_feed
