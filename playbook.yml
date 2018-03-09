@@ -65,6 +65,15 @@
       owner: wherescape
       group: efu
 
+  - name: Create id_rsa file for Wherescape user
+    copy:
+      content: ""
+      dest: /home/wherescape/.ssh/id_rsa
+      force: no
+      mode: 0600
+      owner: wherescape
+      group: efu
+
   - name: Yum Install Pre Dependencies
     yum: name={{ item }}
     with_items:
@@ -96,6 +105,23 @@
       - argparse
       - boto3
 
+  - name: Pull from GIT
+    shell: |
+      sudo -u wherescape echo '{{ git_key }}' | base64 -d > /home/wherescape/.ssh/id_rsa && chmod 600 /home/wherescape/.ssh/id_rsa
+      sudo -u wherescape git clone -b update-vars ssh://git@gitlab.digital.homeoffice.gov.uk:2222/dacc-dq/external_feed.git /home/wherescape
+
+  - name: Symlink script files in opt
+    file:
+      src: "{{ item.src }}"
+      dest: "{{ item.dest }}"
+      force: yes
+      state: link
+      owner: wherescape
+      group: efu
+    with_items:
+      - { src: '/home/wherescape/external_feed/DB/scripts/', dest: '/appdata/EF/scripts'}
+      - { src: '/home/wherescape/external_feed/FTP/scripts/', dest: '/appdata/EF/aws/scripts'}
+
   - name: Install Python 2.7
     unarchive:
      src: https://www.python.org/ftp/python/2.7.10/Python-2.7.10.tgz
@@ -116,29 +142,12 @@
       - AWSCLI
     become: true
 
-  - name: Pull from GIT
-    shell: |
-      echo '{{ git_key }}' | base64 -d > /root/.ssh/id_rsa && chmod 600 /root/.ssh/id_rsa
-      git clone -b update-vars ssh://git@gitlab.digital.homeoffice.gov.uk:2222/dacc-dq/external_feed.git
-
   - name: Install Postgresql 9.6
     shell: '{{ item }}'
     with_items:
       - rpm -ivh https://yum.postgresql.org/9.6/redhat/rhel-7.3-x86_64/pgdg-centos96-9.6-3.noarch.rpm
       - yum update -y
       - yum install -y postgresql96
-
-  - name: Symlink script files in opt
-    file:
-      src: "{{ item.src }}"
-      dest: "{{ item.dest }}"
-      force: yes
-      state: link
-      owner: wherescape
-      group: efu
-    with_items:
-      - { src: '/opt/dq-packer-ext-feeds-linux/DB/scripts/', dest: '/appdata/EF/scripts'}
-      - { src: '/opt/dq-packer-ext-feeds-linux/FTP/scripts/', dest: '/appdata/EF/aws/scripts'}
 
   - name: '{{ item.name }}'
     cron:
@@ -148,7 +157,7 @@
       day: '{{ item.day }}'
       job: '{{ item.job }}'
     with_items:
-        - { name: Cron DRT_EF_FTP_AWS.py, user: ef, minute: "*/1",  hour: "*", day: "*",  job: "/appdata/EF/aws/scripts/DRT_EF_FTP_AWS.py" }
+        - { name: Cron DRT_EF_FTP_AWS.py, user: wherescape, minute: "*/1",  hour: "*", day: "*",  job: "/appdata/EF/aws/scripts/DRT_EF_FTP_AWS.py" }
 
   - name: Download cloudwatch logs agent
     get_url:

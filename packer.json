@@ -30,12 +30,6 @@
         },
         {
           "device_name": "xvdb",
-          "volume_size": 20,
-          "volume_type": "gp2",
-          "delete_on_termination": true
-        },
-        {
-          "device_name": "xvdc",
           "volume_size": 500,
           "volume_type": "gp2",
           "delete_on_termination": true
