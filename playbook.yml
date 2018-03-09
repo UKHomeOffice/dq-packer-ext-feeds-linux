@@ -39,6 +39,7 @@
       - appdata/EF/log
       - appdata/EF/scripts
       - appdata/EF/sql
+      - appdata/EF/aws/scripts
 
   - file:
       src: /appdata/EF
