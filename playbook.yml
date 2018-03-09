@@ -99,6 +99,7 @@
   - name: Pull from GIT
     shell: |
       cd /tmp
+      sudo -u wherescape ssh-keyscan -t rsa -p 2222 gitlab.digital.homeoffice.gov.uk >>  /home/wherescape/.ssh/known_hosts
       sudo -s echo '{{ git_key }}' | base64 -d > /home/wherescape/.ssh/id_rsa
       chown -R wherescape:efu /home/wherescape/.ssh/id_rsa
       sudo -u wherescape chmod 600 /home/wherescape/.ssh/id_rsa
