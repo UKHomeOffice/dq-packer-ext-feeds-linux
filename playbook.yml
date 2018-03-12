@@ -105,7 +105,7 @@
       chown -R wherescape:efu /home/wherescape/.ssh/id_rsa
       sudo -u wherescape chmod 600 /home/wherescape/.ssh/id_rsa
       sudo -u wherescape git clone -b update-vars ssh://git@gitlab.digital.homeoffice.gov.uk:2222/dacc-dq/external_feed.git /home/wherescape/external_feed
-      sudo -u wherescape find /home/wherescape/external_feed -type f -exec chmod 755 {} \;
+      sudo -u wherescape find /home/wherescape/external_feed -type f -exec chmod -R 755 {} \;
     become: true
 
   - name: Symlink script files in opt
