@@ -119,6 +119,7 @@
     with_items:
       - { src: '/home/wherescape/external_feed/DB/scripts/', dest: '/appdata/EF/scripts'}
       - { src: '/home/wherescape/external_feed/FTP/scripts/', dest: '/appdata/EF/aws/scripts'}
+      - { src: '/home/wherescape/external_feed/DB/sql/', dest: '/appdata/EF/sql'}
 
   - name: Install Python 2.7
     unarchive:
