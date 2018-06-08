@@ -173,32 +173,32 @@
         [/var/log/messages]
         file = /var/log/messages
         log_group_name = /Centos_Server/messages
-        log_stream_name = {instance_id}
+        log_stream_name = {hostname}
         datetime_format = %b %d %H:%M:%S
         [/Centos_Server/cloud-init]
         file = /var/log/cloud-init.log
         log_group_name = /Centos_Server/cloud-init
-        log_stream_name = {instance_id}
+        log_stream_name = {hostname}
         datetime_format = %Y-%m-%d %H:%M:%S,%f
         [/Centos_Server/cloud-init/output]
         file = /var/log/cloud-init-output.log
         log_group_name = /Centos_Server/cloud-init/output
-        log_stream_name = {instance_id}
+        log_stream_name = {hostname}
         datetime_format = %Y-%m-%d %H:%M:%S,%f
         [/Centos_Server/cron]
         file = /var/log/cron
         log_group_name = /Centos_Server/cron
-        log_stream_name = {instance_id}
+        log_stream_name = {hostname}
         datetime_format = %Y-%m-%d %H:%M:%S,%f
         [/Centos_Server/secure]
         file = /var/log/secure
         log_group_name = /Centos_Server/secure
-        log_stream_name = {instance_id}
+        log_stream_name = {hostname}
         datetime_format = %Y-%m-%d %H:%M:%S,%f
         [/Centos_Server/yum]
         file = /var/log/yum.log
         log_group_name = /Centos_Server/yum
-        log_stream_name = {instance_id}
+        log_stream_name = {hostname}
         datetime_format = %Y-%m-%d %H:%M:%S,%f
 
   - name: Install cloudwatch log agent
