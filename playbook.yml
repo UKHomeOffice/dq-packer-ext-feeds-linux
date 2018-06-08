@@ -200,6 +200,11 @@
         log_group_name = /Centos_Server/yum
         log_stream_name = {hostname}
         datetime_format = %Y-%m-%d %H:%M:%S,%f
+        [/Centos_Server/DRT_EF_AWS_S3]
+        file = /EF/log/DRT_EF_FTP_AWS_*
+        log_group_name = /Centos_Server/DRT_EF_AWS_S3
+        log_stream_name = {hostname}
+        datetime_format = %Y-%m-%d %H:%M:%S,%f
 
   - name: Install cloudwatch log agent
     environment:
