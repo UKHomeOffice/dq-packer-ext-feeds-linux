@@ -148,6 +148,9 @@
       - yum update -y
       - yum install -y postgresql96
 
+  - name: Update all libraries
+    yum: name=* state=latest      
+
   - name: '{{ item.name }}'
     cron:
       user: '{{ item.user }}'
