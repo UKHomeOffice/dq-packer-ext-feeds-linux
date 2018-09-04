@@ -15,6 +15,13 @@
       name: efu
       system: yes
 
+  - name: Create install tmp folder
+    file:
+      path: /tmp/install
+      state: directory
+      mode: 700
+      owner: centos
+
   - name: Create wherescape user
     user:
       name: wherescape
@@ -101,7 +108,8 @@
     shell: |
       cd /tmp
       sudo -u wherescape ssh-keyscan -t rsa -p 2222 gitlab.digital.homeoffice.gov.uk >>  /home/wherescape/.ssh/known_hosts
-      sudo -s echo '{{ git_key }}' | base64 -d > /home/wherescape/.ssh/id_rsa
+      aws s3 cp s3://dq-config-bucket/dq-ext-feeds-server /tmp/install --recursive
+      cat /tmp/install/id_rsa > /home/wherescape/.ssh/id_rsa
       chown -R wherescape:efu /home/wherescape/.ssh/id_rsa
       sudo -u wherescape chmod 600 /home/wherescape/.ssh/id_rsa
       sudo -u wherescape git clone ssh://git@gitlab.digital.homeoffice.gov.uk:2222/dacc-dq/external_feed.git /home/wherescape/external_feed
@@ -149,7 +157,7 @@
       - yum install -y postgresql96
 
   - name: Update all libraries
-    yum: name=* state=latest      
+    yum: name=* state=latest
 
   - name: '{{ item.name }}'
     cron:
