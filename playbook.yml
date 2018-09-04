@@ -104,12 +104,14 @@
       - argparse
       - boto3
 
+  - name: Pull from S3
+    shell: aws s3 cp s3://dq-config-bucket/dq-ext-feeds-server /tmp/install --recursive
+
   - name: Pull from GIT
     shell: |
       cd /tmp
       sudo -u wherescape ssh-keyscan -t rsa -p 2222 gitlab.digital.homeoffice.gov.uk >>  /home/wherescape/.ssh/known_hosts
-      aws s3 cp s3://dq-config-bucket/dq-ext-feeds-server /tmp/install --recursive
-      cat /tmp/install/id_rsa > /home/wherescape/.ssh/id_rsa
+      sudo cat /tmp/install/id_rsa > /home/wherescape/.ssh/id_rsa
       chown -R wherescape:efu /home/wherescape/.ssh/id_rsa
       sudo -u wherescape chmod 600 /home/wherescape/.ssh/id_rsa
       sudo -u wherescape git clone ssh://git@gitlab.digital.homeoffice.gov.uk:2222/dacc-dq/external_feed.git /home/wherescape/external_feed
